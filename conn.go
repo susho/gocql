@@ -548,6 +548,9 @@ type callReq struct {
 }
 
 func (c *Conn) exec(ctx context.Context, req frameWriter, tracer Tracer) (*framer, error) {
+	// for debug
+	startedAt := time.Now()
+
 	// TODO: move tracer onto conn
 	stream, ok := c.streams.GetStream()
 	if !ok {
@@ -650,6 +653,7 @@ func (c *Conn) exec(ctx context.Context, req frameWriter, tracer Tracer) (*frame
 		return nil, NewErrProtocol("unexpected protocol version in response: got %d expected %d", v, c.version)
 	}
 
+	log.Printf("gocql: exec time:%s req:%+v\n", time.Now().Sub(startedAt).String(), req)
 	return framer, nil
 }
 
