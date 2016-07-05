@@ -164,6 +164,8 @@ func Connect(host *HostInfo, addr string, cfg *ConnConfig,
 		Timeout: cfg.Timeout,
 	}
 
+	// for debug
+	startedAt := time.Now()
 	if cfg.tlsConfig != nil {
 		// the TLS config is safe to be reused by connections but it must not
 		// be modified after being used.
@@ -171,6 +173,7 @@ func Connect(host *HostInfo, addr string, cfg *ConnConfig,
 	} else {
 		conn, err = dialer.Dial("tcp", addr)
 	}
+	log.Printf("gocql: dial time:%s addr:%s\n", time.Now().Sub(startedAt).String(), addr)
 
 	if err != nil {
 		return nil, err
